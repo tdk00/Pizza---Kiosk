@@ -1,9 +1,9 @@
-import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_app_desktop/helper/language_helper.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../helper/config_helper.dart';
 import '../../../models/models.dart';
 
 class ProductDetailsApi {
@@ -11,7 +11,8 @@ class ProductDetailsApi {
 
   static getProductDetailsById( id ) async {
     var lang = await LanguageHelper.getLang();
-    final uri = Uri.parse('http://localhost/kingsmart_ci/ProductDetailsScreen/product_details_by_id/?product_id='+ id.toString() +'&lang=' + lang);
+    var base_url = await ConfigHelper.baseUrl();
+    final uri =Uri.parse(base_url + 'ProductDetailsScreen/product_details_by_id/?product_id='+ id.toString() +'&lang=' + lang);
 
     Response response = await get(uri);
     int statusCode = response.statusCode;
@@ -44,7 +45,8 @@ class ProductDetailsApi {
 
   static getSizeData( id ) async {
     var lang = await LanguageHelper.getLang();
-    final uri = Uri.parse('http://localhost/kingsmart_ci/ProductDetailsScreen/product_details_by_id/?product_id='+ id.toString() +'&lang=' + lang);
+    var base_url = await ConfigHelper.baseUrl();
+    final uri =Uri.parse(base_url + 'ProductDetailsScreen/product_details_by_id/?product_id='+ id.toString() +'&lang=' + lang);
 
     Response response = await get(uri);
     int statusCode = response.statusCode;
@@ -57,7 +59,8 @@ class ProductDetailsApi {
 
   static getExtrasBySizeId( id ) async {
     var lang = await LanguageHelper.getLang();
-    final uri = Uri.parse('http://localhost/kingsmart_ci/ProductDetailsScreen/get_extras_by_product_id/?size_id='+ id.toString() +'&lang=' + lang);
+    var base_url = await ConfigHelper.baseUrl();
+    final uri =Uri.parse(base_url + 'ProductDetailsScreen/get_extras_by_product_id/?size_id='+ id.toString() +'&lang=' + lang);
 
     Response response = await get(uri);
     int statusCode = response.statusCode;
@@ -92,7 +95,8 @@ class ProductDetailsApi {
     final prefs = await SharedPreferences.getInstance();
     var session_id = prefs.getString('session_id') ;
 
-    final uri = Uri.parse('http://localhost/kingsmart_ci/ProductDetailsScreen/add_product_to_shopping_cart');
+    var base_url = await ConfigHelper.baseUrl();
+    final uri =Uri.parse(base_url + 'ProductDetailsScreen/add_product_to_shopping_cart');
     var body = json.encode({ "size_id": size_id, "count" : count, "extras" : jsonEncode(Extralist), "session_id" : session_id });
     Map<String,String> headers = {
       'Content-type' : 'application/json',
@@ -114,7 +118,8 @@ class ProductDetailsApi {
   static updateShoppingCartProduct ( shoppingCartProductId, count, Extralist ) async {
     final prefs = await SharedPreferences.getInstance();
     var session_id = prefs.getString('session_id') ;
-    final uri = Uri.parse('http://localhost/kingsmart_ci/ProductDetailsScreen/update_shopping_cart_product');
+    var base_url = await ConfigHelper.baseUrl();
+    final uri =Uri.parse(base_url + 'ProductDetailsScreen/update_shopping_cart_product');
     var body = json.encode({ "shopping_cart_product_id": shoppingCartProductId, "count" : count, "extras" : jsonEncode(Extralist), "session_id" : session_id });
     Map<String,String> headers = {
       'Content-type' : 'application/json',

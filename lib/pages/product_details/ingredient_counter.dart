@@ -84,7 +84,7 @@ class _IngredientItemState extends State<IngredientItem> {
                 children: <Widget>[
                   Expanded(
                     flex: 10,
-                    child: _itemCount > 1
+                    child: _itemCount > 0
                         ? IconButton(
                       icon: Icon(
                         Icons.remove,
@@ -94,8 +94,12 @@ class _IngredientItemState extends State<IngredientItem> {
                         _itemCount--;
                         if( widget.default_count <= _itemCount )
                         {
-                          widget.update(0 - _itemPrice, _itemCount, widget.id );
+                          widget.update(0 - _itemPrice, _itemCount, widget.id, true );
                         }
+                        else
+                          {
+                            widget.update(0 - _itemPrice, _itemCount, widget.id, false );
+                          }
 
                       }),
                     )
@@ -116,9 +120,13 @@ class _IngredientItemState extends State<IngredientItem> {
                       icon: new Icon(Icons.add, size: 10),
                       onPressed: () => setState(() {
                           _itemCount++;
-                          if(widget.default_count < _itemCount)
+                          if( widget.default_count < _itemCount )
                           {
-                            widget.update(_itemPrice, _itemCount, widget.id);
+                            widget.update(_itemPrice, _itemCount, widget.id, true );
+                          }
+                          else
+                          {
+                            widget.update(_itemPrice, _itemCount, widget.id, false );
                           }
                       }),
                     ),

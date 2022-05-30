@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_app_desktop/pages/language_selection/language_selection.dart';
+
 
 void main() {
   runApp( MyApp(),);
@@ -10,7 +10,7 @@ void main() {
 class MyApp extends StatelessWidget {
   final navigatorKey = GlobalKey<NavigatorState>();
   Timer timer = Timer(Duration(hours: 20), () => {
-    print('aaa')
+    // print('aaa')
   });
   void timeOutCallBack() {
     navigatorKey.currentState?.pushAndRemoveUntil(
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
          {
            timer.cancel();
          }
-        timer = Timer(Duration(seconds: 30), () => timeOutCallBack());
+        timer = Timer(Duration(seconds: 8230), () => timeOutCallBack());
       },
       child: MaterialApp(
         navigatorKey: navigatorKey,
@@ -58,9 +58,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         fit:BoxFit.cover
                     ),
                 )
-            ),onTap:(
+            ),
+            onTap:() async {
 
-            ){
+
           Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (_) => const LanguageSelectionWidget()), (route) => false);
         }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../helper/config_helper.dart';
 import '../../../helper/language_helper.dart';
 import '../../../models/models.dart';
 
@@ -13,7 +14,8 @@ class ShoppingCartApi {
     var prefs =  await SharedPreferences.getInstance();
     var session_id = prefs.get('session_id');
 
-    final uri = Uri.parse('http://localhost/kingsmart_ci/MenuScreen/shopping_cart/?session_id='+ session_id.toString() +'&lang=' + lang);
+    var base_url = await ConfigHelper.baseUrl();
+    final uri =Uri.parse(base_url + 'MenuScreen/shopping_cart/?session_id='+ session_id.toString() +'&lang=' + lang);
     Response response = await get(uri);
     int statusCode = response.statusCode;
     String responseBody = response.body;
@@ -51,7 +53,8 @@ class ShoppingCartApi {
     var session_id = prefs.get('session_id');
 
     print ( session_id );
-    final uri = Uri.parse('http://localhost/kingsmart_ci/MenuScreen/remove_shopping_cart_item/?session_id='+ session_id.toString() + '&shopping_cart_product_id=' + shopping_cart_product_id.toString() );
+    var base_url = await ConfigHelper.baseUrl();
+    final uri =Uri.parse(base_url + 'MenuScreen/remove_shopping_cart_item/?session_id='+ session_id.toString() + '&shopping_cart_product_id=' + shopping_cart_product_id.toString() );
     Response response = await get(uri);
     int statusCode = response.statusCode;
     String responseBody = response.body;

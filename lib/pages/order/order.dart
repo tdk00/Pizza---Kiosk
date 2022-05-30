@@ -1,13 +1,20 @@
+import 'dart:async';
+
+import 'package:esc_pos_printer/esc_pos_printer.dart';
+import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_desktop/helper/printer_helper.dart';
 import 'package:flutter_app_desktop/helper/translate_helper.dart';
 import 'package:flutter_app_desktop/pages/basket/order/order_item.dart';
 import 'package:flutter_app_desktop/pages/menu_products/api/shopping_cart_api.dart';
 import 'package:flutter_app_desktop/pages/menu_products/menu_products.dart';
+import 'package:flutter_app_desktop/pages/order/order_success.dart';
 import 'package:flutter_app_desktop/pages/payment_method_selection/payment_method_selection.dart';
 
+import '../../main.dart';
 import '../../models/models.dart';
 import '../Menu_products/api/menu_products_api.dart';
-import '../basket/menu_products/basketItem.dart';
+import '../eating_place/order_api.dart';
 
 class Order extends StatefulWidget {
   @override
@@ -224,8 +231,29 @@ class _OrderState extends State<Order> {
                                               ),
                                               onPressed: () async {
                                                 await MenuProductsApi.updateShoppingCartProductCounts( _productsList );
-                                                Navigator.pushAndRemoveUntil(context,
-                                                    MaterialPageRoute(builder: (_) => PaymentMethod(_total)), (route) => false);
+                                                var returnObj = await OrderApi.addOrder(_total, 'card');
+                                                if( returnObj['orderNumber'] > 0  )
+                                                  {
+                                                    var orderId = returnObj['orderId'].toString();
+                                                    var orderNumber = returnObj['orderNumber'].toString();
+
+                                                     const PaperSize paper = PaperSize.mm80;
+                                                     final profile = await CapabilityProfile.load();
+                                                     final printer = NetworkPrinter(paper, profile);
+
+                                                    final PosPrintResult res = await printer.connect('192.168.100.87', port: 9100);
+
+                                                    if (res == PosPrintResult.success)
+                                                    {
+                                                      PrinterHelper().generatePrintContent(printer , orderNumber, orderId);
+                                                      Timer(Duration(seconds: 2), () =>
+                                                      {
+                                                        printer.disconnect()
+                                                      });
+                                                    }
+                                                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => OrderSuccess(orderNumber, orderId)), (route) => false);
+                                                  }
+
                                               }),
                                         ),
                                       ],

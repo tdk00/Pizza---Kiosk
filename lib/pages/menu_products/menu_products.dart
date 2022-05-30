@@ -23,7 +23,7 @@ class _MenuProductsState extends State<MenuProducts> {
   var _productsList = [];
   var _productsFuture = MenuProductsApi.getProducts(1);
   var _basketFuture = ShoppingCartApi.getShoppingCartProducts();
-  var _categoryName = "Pizza";
+  var _categoryName = "PizzaA";
   var _defaultCat = 0;
 
   var _firstLoadShoppingCart = true;
@@ -87,6 +87,7 @@ class _MenuProductsState extends State<MenuProducts> {
                         builder:
                             (BuildContext context, AsyncSnapshot snapshot) {
                           if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                            _categoryName = snapshot.data[0].name;
                             return GridView.builder(
                                 gridDelegate:
                                     SliverGridDelegateWithMaxCrossAxisExtent(

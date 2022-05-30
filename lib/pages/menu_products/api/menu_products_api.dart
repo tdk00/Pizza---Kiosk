@@ -5,6 +5,7 @@ import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../helper/config_helper.dart';
 import '../../../models/models.dart';
 
 class MenuProductsApi {
@@ -12,7 +13,8 @@ class MenuProductsApi {
   static Future<List<Category>> getCategories() async {
 
     var lang = await LanguageHelper.getLang();
-    final uri = Uri.parse('http://localhost/kingsmart_ci/MenuScreen/category_list/?lang=' + lang);
+    var base_url = await ConfigHelper.baseUrl();
+    final uri =Uri.parse(base_url + 'MenuScreen/category_list/?lang=' + lang);
 
     Response response = await get(uri);
     int statusCode = response.statusCode;
@@ -36,7 +38,8 @@ class MenuProductsApi {
 
   static Future<List> getProducts( id ) async {
     var lang = await LanguageHelper.getLang();
-    final uri = Uri.parse('http://localhost/kingsmart_ci/MenuScreen/products_list_by_category/?category_id='+ id.toString() +'&lang=' + lang);
+    var base_url = await ConfigHelper.baseUrl();
+    final uri =Uri.parse(base_url + 'MenuScreen/products_list_by_category/?category_id='+ id.toString() +'&lang=' + lang);
 
     Response response = await get(uri);
     int statusCode = response.statusCode;
@@ -60,7 +63,8 @@ class MenuProductsApi {
 
     final prefs = await SharedPreferences.getInstance();
     var session_id = prefs.getString('session_id') ;
-    final uri = Uri.parse('http://localhost/kingsmart_ci/MenuScreen/update_shopping_cart_product_counts');
+    var base_url = await ConfigHelper.baseUrl();
+    final uri =Uri.parse(base_url + 'MenuScreen/update_shopping_cart_product_counts');
     var body = json.encode({
       "session_id" : session_id,
       "product_list": jsonEncode( shoppingCartProductList )

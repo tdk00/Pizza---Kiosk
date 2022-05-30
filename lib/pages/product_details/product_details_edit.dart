@@ -49,8 +49,11 @@ class _ProductDetailsState extends State<ProductDetailsEdit> {
     _productDetailsFuture = ShoppingCartProductDetailsApi.getDetailsById(widget.id);
   }
 
-  void _update(double ingredientPrice, int ingredientCount, int ingredientId ) {
-    setState(() => _itemPrice += ingredientPrice);
+  void _update(double ingredientPrice, int ingredientCount, int ingredientId, increasePrice ) {
+    if( increasePrice )
+    {
+      setState(() => _itemPrice += ingredientPrice);
+    }
     for( var i = 0; i < _ingredientsList.length; i++ )
     {
       if( _ingredientsList[i].id == ingredientId )
@@ -60,6 +63,7 @@ class _ProductDetailsState extends State<ProductDetailsEdit> {
     }
 
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -451,8 +455,12 @@ class _ProductDetailsState extends State<ProductDetailsEdit> {
                       ))
                 ]);
               } else {
-                return Container(
-                  child: Text('ERROR'),
+                return Center(
+                  child: SizedBox(
+                      width: MediaQuery.of(context).size.width / 4 ,
+                      height: MediaQuery.of(context).size.height / 2,
+                      child: CircularProgressIndicator()
+                  ),
                 );
               }
             }),

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_app_desktop/pages/Menu_products/menu_products.dart';
 import 'package:flutter_app_desktop/pages/product_details/api/product_details_api.dart';
@@ -7,7 +5,6 @@ import 'package:flutter_app_desktop/pages/product_details/ingredient_counter.dar
 
 import '../../helper/translate_helper.dart';
 import '../../models/models.dart';
-import '../Menu_products/api/menu_products_api.dart';
 
 class ProductDetails extends StatefulWidget {
   String id;
@@ -34,7 +31,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   Future<void> setDetails() async {
     List details = await ProductDetailsApi.getProductDetailsById( widget.id );
     if (details.isNotEmpty) {
-      if( details[0].sizes.length > 1 )
+      if( details[0].sizes.length > 0 )
         {
           _showSizesDropdown = true;
         }
@@ -58,8 +55,11 @@ class _ProductDetailsState extends State<ProductDetails> {
 
 
 
-  void _update(double ingredientPrice, int ingredientCount, int ingredientId ) {
-    setState(() => _itemPrice += ingredientPrice);
+  void _update(double ingredientPrice, int ingredientCount, int ingredientId, increasePrice ) {
+    if( increasePrice )
+      {
+        setState(() => _itemPrice += ingredientPrice);
+      }
     for( var i = 0; i < _ingredientsList.length; i++ )
       {
         if( _ingredientsList[i].id == ingredientId )
@@ -472,8 +472,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                       ))
                 ]);
               } else {
-                return Container(
-                  child: Text('ERROR'),
+                return Center(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width / 4 ,
+                    height: MediaQuery.of(context).size.height / 2,
+                    child: CircularProgressIndicator()
+                  ),
                 );
               }
             }),

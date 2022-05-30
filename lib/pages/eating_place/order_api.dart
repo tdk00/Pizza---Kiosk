@@ -1,10 +1,8 @@
-import 'dart:async';
 import 'dart:convert';
-import 'package:flutter_app_desktop/helper/language_helper.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../models/models.dart';
+import '../../helper/config_helper.dart';
 
 class OrderApi {
 
@@ -12,7 +10,8 @@ class OrderApi {
     final prefs = await SharedPreferences.getInstance();
     var session_id = prefs.getString('session_id') ;
     var is_takeaway = prefs.getInt('is_takeaway') ;
-    final uri = Uri.parse('http://localhost/kingsmart_ci/Orders/add_order');
+    var base_url = await ConfigHelper.baseUrl();
+    final uri =Uri.parse(base_url + 'Orders/add_order');
     var body = json.encode({ "total_amount": totalAmount, "payment_type" : payment_type, "session_id" : session_id, "is_takeaway" : is_takeaway });
     Map<String,String> headers = {
       'Content-type' : 'application/json',
@@ -25,13 +24,14 @@ class OrderApi {
 
 
     if ( statusCode == 200 ) {
-        return true;
+       print( jsonDecode(responseBody)["orderObj"] );
+        return { 'orderId' : jsonDecode(responseBody)["orderId"], 'orderNumber' :  jsonDecode(responseBody)["orderNumber"] };
     }
     else {
-      return false;
+      return { 'orderId' : 0, 'orderNumber' :  0 };
     }
 
   }
 
-
 }
+

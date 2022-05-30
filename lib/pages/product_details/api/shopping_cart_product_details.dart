@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter_app_desktop/helper/config_helper.dart';
 import 'package:flutter_app_desktop/helper/language_helper.dart';
 import 'package:http/http.dart';
 
@@ -10,7 +11,7 @@ class ShoppingCartProductDetailsApi {
 
   static getDetailsById( id ) async {
     var lang = await LanguageHelper.getLang();
-    final uri = Uri.parse('http://localhost/kingsmart_ci/ProductDetailsScreen/shopping_cart_product_details_by_id/?shopping_cart_product_id='+ id.toString() +'&lang=' + lang);
+    final uri = Uri.parse( ConfigHelper.baseUrl() + 'ProductDetailsScreen/shopping_cart_product_details_by_id/?shopping_cart_product_id='+ id.toString() +'&lang=' + lang);
 
     Response response = await get(uri);
     int statusCode = response.statusCode;
@@ -42,7 +43,8 @@ class ShoppingCartProductDetailsApi {
 
   static getExtrasByShoppingCartProductId( id ) async {
     var lang = await LanguageHelper.getLang();
-    final uri = Uri.parse('http://localhost/kingsmart_ci/ProductDetailsScreen/get_extras_by_shopping_cart_product_id/?shopping_cart_product_id='+ id.toString() +'&lang=' + lang);
+    var base_url = await ConfigHelper.baseUrl();
+    final uri =Uri.parse(base_url + 'ProductDetailsScreen/get_extras_by_shopping_cart_product_id/?shopping_cart_product_id='+ id.toString() +'&lang=' + lang);
 
     Response response = await get(uri);
     int statusCode = response.statusCode;
